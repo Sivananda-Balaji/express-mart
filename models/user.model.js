@@ -1,10 +1,8 @@
 const mongoose = require("mongoose");
 
-const UserSchema = mongoose.Schema({
-  createdAt: {
-    type: Date,
-    immutable: true,
-    default: Date.now(),
+const userSchema = mongoose.Schema({
+  _id: {
+    type: Number,
   },
   email: {
     type: String,
@@ -30,14 +28,36 @@ const UserSchema = mongoose.Schema({
   },
   role: {
     type: String,
+    enum: ["USER", "ADMIN"],
     default: "USER",
   },
   updatedAt: {
     type: Date,
     default: Date.now(),
   },
+  createdAt: {
+    type: Date,
+    immutable: true,
+    default: Date.now(),
+  },
+  userName: {
+    type: String,
+    default: function () {
+      return `${this.firstName} ${this.lastName}`;
+    },
+  },
 });
 
-const User = mongoose.model("User", UserSchema);
+userSchema.pre("save", async function (next) {
+  const doc = this;
+  if (doc.isNew) {
+    const lastUser = await User.findOne().sort({ _id: -1 });
+    const newId = (lastUser && lastUser._id + 1) || 1000;
+    doc._id = newId;
+  }
+  next();
+});
+
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;
