@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 
 const addressSchema = mongoose.Schema({
+  _id: {
+    type: Number,
+  },
   city: {
     type: String,
     required: true,
@@ -37,11 +40,21 @@ const addressSchema = mongoose.Schema({
     default: Date.now(),
   },
   user: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Number,
     ref: "User",
   },
 });
 
-const Address = mongoose.model("Address", addressSchema);
+addressSchema.pre("save", async function (next) {
+  const doc = this;
+  if (doc.isNew) {
+    const lastAddress = await ShippingAddress.findOne().sort({ _id: -1 });
+    const newId = (lastAddress && lastAddress._id + 1) || 2000;
+    doc._id = newId;
+  }
+  next();
+});
 
-module.exports = Address;
+const ShippingAddress = mongoose.model("Address", addressSchema);
+
+module.exports = ShippingAddress;
