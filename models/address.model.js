@@ -4,13 +4,6 @@ const addressSchema = mongoose.Schema({
   _id: {
     type: Number,
   },
-  city: {
-    type: String,
-    required: true,
-  },
-  landmark: {
-    type: String,
-  },
   name: {
     type: String,
     required: true,
@@ -19,11 +12,18 @@ const addressSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  state: {
+  street: {
     type: String,
     required: true,
   },
-  street: {
+  landmark: {
+    type: String,
+  },
+  city: {
+    type: String,
+    required: true,
+  },
+  state: {
     type: String,
     required: true,
   },
