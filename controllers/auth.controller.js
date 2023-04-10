@@ -9,21 +9,18 @@ const signUp = async (req, res) => {
     const isEmailExists = await User.findOne({ email });
     if (isEmailExists) {
       return res.status(400).send({
-        status: "Failed",
         message: "Try any other email, this email is already registered!",
       });
     }
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-z]{2,6}$/;
     if (!emailRegex.test(email)) {
       return res.status(400).send({
-        status: "Failed",
         message: "Invalid email-id format!",
       });
     }
     const contactRegex = /^[0-9]{10}$/;
     if (!contactRegex.test(contactNumber)) {
       return res.status(400).send({
-        status: "Failed",
         message: "Invalid contact number!",
       });
     }
@@ -39,7 +36,6 @@ const signUp = async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(500).send({
-      status: "Failed",
       message: "Something went wrong!",
     });
   }
@@ -51,14 +47,12 @@ const signIn = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).send({
-        status: "Failed",
         message: "This email has not been registered!",
       });
     }
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) {
       return res.status(401).send({
-        status: "Failed",
         message: "Invalid Credentials!",
       });
     }
@@ -72,7 +66,6 @@ const signIn = async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(500).send({
-      status: "Failed",
       message: "Something went wrong!",
     });
   }
