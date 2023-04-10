@@ -1,23 +1,22 @@
 const mongoose = require("mongoose");
 
 const productSchema = mongoose.Schema({
-  availableItems: {
-    type: number,
+  _id: {
+    type: Number,
+  },
+  name: {
+    type: String,
     required: true,
   },
   category: {
     type: String,
     required: true,
   },
-  createdAt: {
-    type: Date,
-    default: Date.now(),
-  },
-  description: {
-    type: String,
+  price: {
+    type: Number,
     required: true,
   },
-  imageUrl: {
+  description: {
     type: String,
     required: true,
   },
@@ -25,18 +24,32 @@ const productSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  name: {
+  availableItems: {
+    type: Number,
+    required: true,
+  },
+  imageUrl: {
     type: String,
     required: true,
   },
-  price: {
-    type: mongoose.Schema.Types.Double,
-    required: true,
+  createdAt: {
+    type: Date,
+    default: Date.now(),
   },
   updatedAt: {
     type: Date,
     default: Date.now(),
   },
+});
+
+productSchema.pre("save", async function (next) {
+  const doc = this;
+  if (doc.isNew) {
+    const lastProduct = await Product.findOne().sort({ _id: -1 });
+    const newId = (lastProduct && lastProduct._id + 1) || 3000;
+    doc._id = newId;
+  }
+  next();
 });
 
 const Product = mongoose.model("Product", productSchema);
