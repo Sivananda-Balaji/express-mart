@@ -3,7 +3,7 @@ const { verifyToken, isAdmin } = require("../middleware/auth");
 const {
   createProduct,
   getCategories,
-  getproduct,
+  getProduct,
   updateProduct,
   deleteproduct,
 } = require("../controllers/product.controller");
@@ -14,7 +14,7 @@ router.route("/").post([verifyToken, isAdmin], createProduct);
 router.route("/categories").get(getCategories);
 router
   .route("/:id")
-  .get(getproduct)
+  .get(getProduct)
   .put([verifyToken, isAdmin], updateProduct)
   .delete([verifyToken, isAdmin], deleteproduct);
 
