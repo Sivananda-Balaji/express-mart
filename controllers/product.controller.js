@@ -118,10 +118,41 @@ const deleteproduct = async (req, res) => {
   }
 };
 
+const getProducts = async (req, res) => {
+  try {
+    const { name, category, direction = "DESC", sortBy = "_id" } = req.query;
+    const query = {};
+    name ? (query.name = name) : "";
+    category ? (query.category = category) : "";
+    const products = await Product.find(query)
+      .sort({
+        [sortBy]: direction,
+      })
+      .select("-__v");
+    const isTrue = products.length === 0 ? true : false;
+    const responseObj = {
+      content: products,
+      numberOfElements: products.length,
+      empty: isTrue,
+      sort: {
+        sorted: !isTrue,
+        unsorted: isTrue,
+      },
+    };
+    res.send(responseObj);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({
+      message: "someting went wrong",
+    });
+  }
+};
+
 module.exports = {
   createProduct,
   getCategories,
   getProduct,
   updateProduct,
   deleteproduct,
+  getProducts,
 };
