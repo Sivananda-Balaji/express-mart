@@ -33,6 +33,7 @@ const createOrder = async (req, res) => {
       user: Number(address.user),
     };
     const order = await Order.create(requestObj);
+    //This code uses the Mongoose populate() method to fetch related data for the order object and exclue version key.
     let orderResponse = await order.populate(
       "product shippingAddress user",
       "-__v"

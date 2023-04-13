@@ -121,6 +121,7 @@ const deleteproduct = async (req, res) => {
 const getProducts = async (req, res) => {
   try {
     const { name, category, direction = "DESC", sortBy = "_id" } = req.query;
+    // The below code creates a query object based on the user input and find the product matches the query object.
     const query = {};
     name ? (query.name = name) : "";
     category ? (query.category = category) : "";
