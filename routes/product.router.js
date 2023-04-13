@@ -1,5 +1,5 @@
 const express = require("express");
-const { verifyToken, isAdmin } = require("../middleware/auth");
+const { verifyToken } = require("../middleware/auth");
 const {
   createProduct,
   getCategories,
@@ -8,6 +8,7 @@ const {
   deleteproduct,
   getProducts,
 } = require("../controllers/product.controller");
+const { isAdmin } = require("../middleware/authorize");
 
 const router = express.Router();
 
