@@ -2,7 +2,8 @@ const ShippingAddress = require("../models/address.model");
 
 const createAddress = async (req, res) => {
   try {
-    const { contactNumber, zipcode } = req.body;
+    const { name, contactNumber, street, landmark, city, state, zipcode } =
+      req.body;
     const zipcodeRegex = /^\d{6}$/;
     if (!zipcodeRegex.test(zipcode)) {
       return res.status(400).send({
@@ -16,13 +17,19 @@ const createAddress = async (req, res) => {
       });
     }
     const addressObj = {
-      ...req.body,
+      name,
+      contactNumber,
+      street,
+      landmark,
+      city,
+      state,
+      zipcode,
       user: Number(req._id),
     };
     const address = await ShippingAddress.create(addressObj);
-    const addressRes = await address.populate("user", "-__v -userName");
-    const finalRes = addressRes.toObject({ versionKey: false });
-    res.send(finalRes);
+    const addressResponse = await address.populate("user", "-__v -userName");
+    const finalResponse = addressResponse.toObject({ versionKey: false });
+    res.send(finalResponse);
   } catch (err) {
     console.log(err);
     return res.status(500).send({
