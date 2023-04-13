@@ -1,4 +1,4 @@
 module.exports = {
   //Add Secret key
-  secret: "",
+  secret: "always_secret",
 };
